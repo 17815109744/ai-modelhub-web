@@ -10716,3 +10716,536 @@ html[data-theme="dark"] #view-overview .chat-history > .chat-empty {
     transform: translateY(0);
   }
 }
+
+/* Final mobile layout contract: keep desktop/L2 visuals intact, but stop the
+   persistent desktop split from squeezing the phone viewport. */
+@media (max-width: 900px) {
+  html,
+  body {
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  body {
+    overflow-y: auto !important;
+  }
+
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100svh !important;
+    height: auto !important;
+    padding: 10px !important;
+  }
+
+  .main,
+  .workspace,
+  .view.active {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .workspace {
+    display: block !important;
+    padding: 62px 0 10px !important;
+  }
+
+  #view-overview.active {
+    display: block !important;
+  }
+
+  .view.active:not(#view-overview) {
+    padding: 0 !important;
+  }
+
+  .sidebar,
+  .sidebar:hover,
+  .sidebar:focus-within {
+    position: fixed !important;
+    top: 10px !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 10px !important;
+    z-index: 60 !important;
+    display: grid !important;
+    align-content: start !important;
+    width: 48px !important;
+    height: 48px !important;
+    max-height: calc(100svh - 20px) !important;
+    gap: 0 !important;
+    padding: 4px !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+    transform: none !important;
+    transition:
+      width 0.2s ease,
+      height 0.2s ease,
+      padding 0.2s ease,
+      border-radius 0.2s ease,
+      box-shadow 0.2s ease !important;
+  }
+
+  .sidebar.open {
+    width: min(292px, calc(100vw - 20px)) !important;
+    height: auto !important;
+    max-height: calc(100svh - 20px) !important;
+    gap: 8px !important;
+    padding: 8px !important;
+    overflow: auto !important;
+    border-radius: 20px !important;
+  }
+
+  .mobile-menu,
+  .sidebar .mobile-menu {
+    display: grid !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    padding: 0 !important;
+    place-items: center !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+  }
+
+  .sidebar:not(.open) .brand,
+  .sidebar:not(.open) .nav-list,
+  .sidebar:not(.open) .sidebar-footer {
+    display: none !important;
+    width: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    transform: none !important;
+  }
+
+  .sidebar.open .brand {
+    display: flex !important;
+  }
+
+  .sidebar.open .nav-list,
+  .sidebar.open .sidebar-footer {
+    display: grid !important;
+  }
+
+  .sidebar.open .brand,
+  .sidebar.open .nav-list,
+  .sidebar.open .sidebar-footer {
+    width: 100% !important;
+    max-height: none !important;
+    margin-top: 0 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+  }
+
+  .sidebar.open .nav-list {
+    max-height: min(56svh, 440px) !important;
+    overflow: auto !important;
+  }
+
+  .sidebar.open .sidebar-actions {
+    display: grid !important;
+    grid-template-columns: 40px minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .sidebar.open .sidebar-footer span {
+    display: block !important;
+  }
+
+  .sidebar .nav-item {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #view-overview .home-chat,
+  html:not([data-theme="dark"]) #view-overview .home-chat,
+  html[data-theme="dark"] #view-overview .home-chat {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: calc(100svh - 82px) !important;
+    min-height: 520px !important;
+    margin: 0 !important;
+    border-radius: 18px !important;
+  }
+
+  #view-overview .chat-toolbar,
+  #view-overview .panel-header.chat-toolbar,
+  html:not([data-theme="dark"]) #view-overview .chat-toolbar,
+  html[data-theme="dark"] #view-overview .chat-toolbar {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 14px 12px 10px !important;
+  }
+
+  #view-overview .chat-toolbar > div:first-child {
+    min-width: 0 !important;
+  }
+
+  #view-overview .chat-toolbar .section-kicker {
+    margin-bottom: 3px !important;
+  }
+
+  #view-overview .chat-toolbar h2 {
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+  }
+
+  #view-overview .chat-toolbar #modelTabs,
+  html:not([data-theme="dark"]) #view-overview .chat-toolbar #modelTabs,
+  html[data-theme="dark"] #view-overview .chat-toolbar #modelTabs,
+  #modelTabs {
+    display: flex !important;
+    grid-template-columns: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 8px !important;
+    padding: 4px 2px 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    touch-action: pan-x !important;
+    cursor: grab !important;
+  }
+
+  #view-overview .chat-toolbar #modelTabs::-webkit-scrollbar,
+  #modelTabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  #view-overview .chat-toolbar #modelTabs button,
+  #view-overview .chat-toolbar #modelTabs button.active,
+  html:not([data-theme="dark"]) #view-overview .chat-toolbar #modelTabs button,
+  html:not([data-theme="dark"]) #view-overview .chat-toolbar #modelTabs button.active,
+  html[data-theme="dark"] #view-overview .chat-toolbar #modelTabs button,
+  html[data-theme="dark"] #view-overview .chat-toolbar #modelTabs button.active,
+  #modelTabs button,
+  #modelTabs button.active {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: max-content !important;
+    max-width: none !important;
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+  }
+
+  #view-overview .chat-toolbar #modelTabs .model-tab-glass,
+  #modelTabs .model-tab-glass {
+    top: 3px !important;
+    height: calc(100% - 8px) !important;
+  }
+
+  #view-overview .toolbar-actions,
+  html:not([data-theme="dark"]) #view-overview .toolbar-actions,
+  html[data-theme="dark"] #view-overview .toolbar-actions {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+  }
+
+  #view-overview .chat-mode-controls {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+  }
+
+  #view-overview .chat-mode-controls .switch {
+    min-width: 0 !important;
+    min-height: 34px !important;
+    padding: 0 8px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+
+  #view-overview #clearChat {
+    width: auto !important;
+    min-width: 62px !important;
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    flex: 0 0 auto !important;
+    justify-self: end !important;
+  }
+
+  #view-overview .chat-history {
+    min-height: 0 !important;
+    padding: 14px 12px !important;
+  }
+
+  #view-overview #chatForm.composer,
+  #view-overview .composer {
+    padding: 10px 12px 12px !important;
+  }
+
+  #view-overview #chatInput {
+    min-height: 60px !important;
+    font-size: 14px !important;
+  }
+
+  #view-overview .composer-footer {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+  }
+
+  #view-overview .composer-meta {
+    display: none !important;
+  }
+
+  #view-overview .composer-actions {
+    width: auto !important;
+    min-width: 0 !important;
+    justify-content: flex-end !important;
+  }
+
+  #view-overview #chatAttachButton,
+  #view-overview .composer-actions .primary-button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+  }
+
+  #view-overview #chatAttachButton {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+
+  #view-overview .composer-actions .primary-button {
+    min-width: 66px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    padding: 0 16px !important;
+  }
+
+  .keys-layout,
+  .usage-layout,
+  .workshop-layout,
+  .knowledge-layout,
+  .batch-layout,
+  .platform-layout,
+  .profile-layout,
+  #view-usage .usage-layout,
+  #view-prompts .workshop-layout,
+  #view-knowledge .knowledge-layout,
+  #view-batch .batch-layout,
+  #view-profile .profile-layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .view.active:not(#view-overview) .panel {
+    min-width: 0 !important;
+    border-radius: 18px !important;
+    overflow: clip !important;
+  }
+
+  .panel-header,
+  html:not([data-theme="dark"]) .view:not(#view-overview) .panel-header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: start !important;
+    gap: 10px !important;
+    min-height: 0 !important;
+    padding: 14px 12px 10px !important;
+  }
+
+  .panel-header .toolbar-actions,
+  .panel-header .inline-controls {
+    width: 100% !important;
+  }
+
+  .key-form,
+  .prompt-form,
+  .knowledge-form,
+  .batch-form,
+  .qa-form,
+  .moderation-row,
+  html:not([data-theme="dark"]) #view-keys .key-form,
+  html:not([data-theme="dark"]) #view-prompts .prompt-form,
+  html:not([data-theme="dark"]) #view-knowledge .knowledge-form,
+  html:not([data-theme="dark"]) #view-batch .batch-form,
+  html:not([data-theme="dark"]) #view-knowledge .qa-form {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    margin: 0 12px 12px !important;
+    padding: 12px !important;
+  }
+
+  .chart-grid,
+  .prompt-grid,
+  .setting-grid,
+  .billing-plans,
+  .kb-list,
+  .job-list,
+  .price-list,
+  html:not([data-theme="dark"]) #view-usage .chart-grid,
+  html:not([data-theme="dark"]) #view-prompts .prompt-grid,
+  html:not([data-theme="dark"]) #view-profile .setting-grid,
+  html:not([data-theme="dark"]) #view-profile .billing-plans,
+  html:not([data-theme="dark"]) #view-knowledge .kb-list,
+  html:not([data-theme="dark"]) #view-usage .price-list {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+  }
+
+  #view-usage .usage-layout > .panel.span-2,
+  .span-2 {
+    grid-column: auto !important;
+  }
+
+  .chart-grid .chart-canvas,
+  html:not([data-theme="dark"]) #view-usage #usageLineChart,
+  html:not([data-theme="dark"]) #view-usage #usageBarChart {
+    height: 176px !important;
+    min-height: 176px !important;
+  }
+
+  .table-wrap,
+  html:not([data-theme="dark"]) #view-keys .table-wrap,
+  html:not([data-theme="dark"]) #view-batch .table-wrap {
+    width: auto !important;
+    max-width: calc(100vw - 44px) !important;
+    margin: 0 12px 12px !important;
+    padding: 10px !important;
+    overflow: auto hidden !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    border-radius: 16px !important;
+  }
+
+  .view.active:not(#view-overview) .table-wrap,
+  .view.active:not(#view-overview) .table-wrap.panel,
+  html:not([data-theme="dark"]) .view.active:not(#view-overview) .table-wrap,
+  html:not([data-theme="dark"]) .view.active:not(#view-overview) .table-wrap.panel {
+    overflow: auto hidden !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  .data-table {
+    min-width: 620px !important;
+  }
+
+  .qa-answer,
+  html:not([data-theme="dark"]) #view-knowledge .qa-answer,
+  .batch-status,
+  html:not([data-theme="dark"]) #view-batch .batch-status {
+    margin-right: 12px !important;
+    margin-left: 12px !important;
+  }
+
+  .prompt-card,
+  .job-card,
+  .kb-card,
+  .billing-plans button,
+  .health-row,
+  .timeline-row,
+  .price-row,
+  .check-row {
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .app-shell {
+    padding: 8px !important;
+  }
+
+  .workspace {
+    padding-top: 58px !important;
+  }
+
+  #view-overview .home-chat,
+  html:not([data-theme="dark"]) #view-overview .home-chat,
+  html[data-theme="dark"] #view-overview .home-chat {
+    height: calc(100svh - 74px) !important;
+    min-height: 500px !important;
+    border-radius: 16px !important;
+  }
+
+  #view-overview .chat-toolbar,
+  #view-overview .panel-header.chat-toolbar {
+    padding: 12px 10px 8px !important;
+  }
+
+  #view-overview .chat-toolbar #modelTabs button,
+  #view-overview .chat-toolbar #modelTabs button.active,
+  #modelTabs button,
+  #modelTabs button.active {
+    min-height: 32px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+  }
+
+  #view-overview .toolbar-actions {
+    gap: 8px !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  #view-overview .chat-mode-controls {
+    gap: 6px !important;
+  }
+
+  #view-overview .chat-mode-controls .switch {
+    padding: 0 7px !important;
+    font-size: 11px !important;
+  }
+
+  #view-overview #clearChat {
+    min-width: 56px !important;
+    padding: 0 10px !important;
+    justify-self: end !important;
+  }
+
+  .panel-header,
+  html:not([data-theme="dark"]) .view:not(#view-overview) .panel-header {
+    padding: 12px 10px 8px !important;
+  }
+
+  .key-form,
+  .prompt-form,
+  .knowledge-form,
+  .batch-form,
+  .qa-form,
+  .moderation-row,
+  html:not([data-theme="dark"]) #view-keys .key-form,
+  html:not([data-theme="dark"]) #view-prompts .prompt-form,
+  html:not([data-theme="dark"]) #view-knowledge .knowledge-form,
+  html:not([data-theme="dark"]) #view-batch .batch-form,
+  html:not([data-theme="dark"]) #view-knowledge .qa-form {
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+  }
+
+  .table-wrap,
+  html:not([data-theme="dark"]) #view-keys .table-wrap,
+  html:not([data-theme="dark"]) #view-batch .table-wrap {
+    max-width: calc(100vw - 36px) !important;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+  }
+}
