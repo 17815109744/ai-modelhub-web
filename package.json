@@ -2,7 +2,7 @@
   "name": "modelhub-console",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@11.7.0",
+  "packageManager": "pnpm@9.15.9",
   "description": "AI multi-provider key vault, model router, usage dashboard, prompt workshop, knowledge base and batch job console.",
   "main": "server.js",
   "scripts": {
