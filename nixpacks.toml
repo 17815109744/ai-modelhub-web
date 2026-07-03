@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = ["DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/modelhub} DIRECT_URL=${DIRECT_URL:-postgresql://postgres:postgres@localhost:5432/modelhub} pnpm install --frozen-lockfile"]
+
+[phases.build]
+cmds = ["DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/modelhub} DIRECT_URL=${DIRECT_URL:-postgresql://postgres:postgres@localhost:5432/modelhub} pnpm prisma generate"]
+
+[start]
+cmd = "node server.js"
