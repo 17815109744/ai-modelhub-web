@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>账号登录 - ModelHub</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="auth-screen">
+    <svg class="liquid-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="liquid-glass-filter" x="-18%" y="-18%" width="136%" height="136%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.018 0.036" numOctaves="2" seed="24" result="noise"></feTurbulence>
+          <feGaussianBlur in="noise" stdDeviation="0.8" result="softNoise"></feGaussianBlur>
+          <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="18" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+        </filter>
+      </defs>
+    </svg>
+
+    <main class="auth-page">
+      <section class="auth-card panel liquid-glass">
+        <a class="auth-back" id="authBackLink" href="/">返回主页</a>
+
+        <header class="auth-hero">
+          <div class="brand-avatar auth-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.25" fill="currentColor"></circle>
+              <path d="M6.75 18.25C7.55 15.62 9.55 14.25 12 14.25C14.45 14.25 16.45 15.62 17.25 18.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="auth-hero-copy">
+            <p class="section-kicker">Account</p>
+            <h1 id="authTitle">登录 ModelHub</h1>
+            <p id="authLead">登录后继续你的多模型工作台和会话记录。</p>
+          </div>
+        </header>
+
+        <nav class="auth-mode-switch" aria-label="认证模式">
+          <a class="auth-mode-link" id="modeSignInLink" href="/auth.html?mode=signin&returnTo=%2F">登录</a>
+          <a class="auth-mode-link" id="modeSignUpLink" href="/auth.html?mode=signup&returnTo=%2F">注册</a>
+        </nav>
+
+        <p class="auth-notice" id="authNotice" data-tone="info">正在检查 Supabase 连接状态...</p>
+
+        <form class="auth-form-card" id="authForm">
+          <label class="auth-field">
+            <span>邮箱</span>
+            <input id="authEmailInput" type="email" autocomplete="email" placeholder="you@example.com" required>
+          </label>
+          <label class="auth-field">
+            <span>密码</span>
+            <input id="authPasswordInput" type="password" autocomplete="current-password" placeholder="至少 6 位" required>
+          </label>
+          <button class="primary-button auth-submit" id="authSubmitButton" type="submit">登录</button>
+        </form>
+
+        <section class="auth-session" id="authSession" hidden>
+          <div>
+            <strong id="authSessionIdentity">未登录</strong>
+            <span id="authSessionMeta">当前账号可直接返回主页继续使用。</span>
+          </div>
+          <div class="auth-session-actions">
+            <button class="ghost-button" id="authSignOutButton" type="button">退出登录</button>
+            <a class="primary-button" id="authReturnLink" href="/">返回主页</a>
+          </div>
+        </section>
+
+        <div class="auth-alt">
+          <span id="authAltText">还没有账号？</span>
+          <a id="authAltLink" href="/auth.html?mode=signup&returnTo=%2F">去注册</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="liquid-glass-modules.js"></script>
+    <script src="auth.js"></script>
+  </body>
+</html>

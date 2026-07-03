@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ModelHub AI 聚合控制台</title>
+    <link rel="stylesheet" href="styles.css?v=shared-chat-controls-20260630">
+  </head>
+  <body>
+    <svg class="liquid-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="liquid-glass-filter" x="-18%" y="-18%" width="136%" height="136%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.018 0.036" numOctaves="2" seed="24" result="noise"></feTurbulence>
+          <feGaussianBlur in="noise" stdDeviation="0.8" result="softNoise"></feGaussianBlur>
+          <feDisplacementMap in="SourceGraphic" in2="softNoise" scale="18" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+        </filter>
+        <filter id="model-edge-frost" x="-16%" y="-34%" width="132%" height="168%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.048" numOctaves="2" seed="31" result="edgeNoise"></feTurbulence>
+          <feGaussianBlur in="edgeNoise" stdDeviation="0.32" result="softEdgeNoise"></feGaussianBlur>
+          <feDisplacementMap in="SourceGraphic" in2="softEdgeNoise" scale="7" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+        </filter>
+      </defs>
+    </svg>
+    <div class="app-shell">
+      <aside class="sidebar liquid-glass" aria-label="主导航">
+        <button class="mobile-menu" type="button" aria-label="打开导航" title="打开导航">菜单</button>
+        <button class="brand profile-trigger" data-view-jump="profile" type="button" aria-label="个人中心" title="个人中心">
+          <div class="brand-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.25" fill="currentColor"></circle>
+              <path d="M6.75 18.25C7.55 15.62 9.55 14.25 12 14.25C14.45 14.25 16.45 15.62 17.25 18.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <strong id="accountIdentity">未登录</strong>
+            <span id="accountStatusLabel">访客模式</span>
+          </div>
+        </button>
+        <nav class="nav-list">
+          <span class="nav-tab-trail" aria-hidden="true"></span>
+          <span class="nav-tab-glass" aria-hidden="true"></span>
+          <button class="nav-item active" data-view="overview" type="button">
+            <span class="nav-icon" aria-hidden="true">H</span>
+            <span>聊天主页</span>
+          </button>
+          <button class="nav-item" data-view="keys" type="button">
+            <span class="nav-icon" aria-hidden="true">K</span>
+            <span>密钥管理</span>
+          </button>
+          <button class="nav-item" data-view="usage" type="button">
+            <span class="nav-icon" aria-hidden="true">U</span>
+            <span>用量仪表盘</span>
+          </button>
+          <button class="nav-item" data-view="prompts" type="button">
+            <span class="nav-icon" aria-hidden="true">A</span>
+            <span>AI 应用工坊</span>
+          </button>
+          <button class="nav-item" data-view="knowledge" type="button">
+            <span class="nav-icon" aria-hidden="true">D</span>
+            <span>知识库问答</span>
+          </button>
+          <button class="nav-item" data-view="batch" type="button">
+            <span class="nav-icon" aria-hidden="true">B</span>
+            <span>批量处理</span>
+          </button>
+          <button class="nav-item legacy-platform-item" data-view="platform" type="button" hidden>
+            <span class="nav-icon" aria-hidden="true">P</span>
+            <span>平台设置</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="sidebar-actions">
+            <button class="icon-button" id="themeToggle" type="button" aria-label="切换主题" title="切换主题">T</button>
+            <button class="ghost-button small" data-view-jump="keys" type="button">添加密钥</button>
+          </div>
+          <span id="accountMeta">点击头像进入个人中心。</span>
+          <strong id="sidebarBudget">预算健康</strong>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar" aria-hidden="true">
+          <div class="topbar-copy">
+            <span id="viewEyebrow">Overview</span>
+            <h1 id="viewTitle">ModelHub 工作台</h1>
+          </div>
+          <div class="topbar-actions">
+            <label class="search-box">
+              <span aria-hidden="true">S</span>
+              <input id="globalSearch" type="search" placeholder="搜索模型、密钥、提示词">
+            </label>
+          </div>
+        </header>
+
+        <section class="workspace">
+          <section class="view active" id="view-overview" data-title="ModelHub 工作台" data-eyebrow="Overview">
+            <section class="panel overview-main chat-panel home-chat liquid-glass">
+              <div class="panel-header chat-toolbar">
+                <div>
+                  <p class="section-kicker">Model Router</p>
+                  <h2>多模型聊天室</h2>
+                </div>
+                <div class="segmented" id="modelTabs" role="tablist" aria-label="模型选择">
+                  <span class="model-tab-trail" aria-hidden="true"></span>
+                  <span class="model-tab-glass" aria-hidden="true"></span>
+                  <button class="active" type="button" data-model-id="gpt-4.1" aria-pressed="true">GPT-4.1</button>
+                  <button type="button" data-model-id="claude-sonnet" aria-pressed="false">Claude Sonnet</button>
+                  <button type="button" data-model-id="gemini-2.5-flash" aria-pressed="false">Gemini 2.5 Flash</button>
+                  <button type="button" data-model-id="deepseek-chat" aria-pressed="false">DeepSeek Chat</button>
+                  <button type="button" data-model-id="qwen2.5:3b" aria-pressed="false">Qwen2.5 3B</button>
+                </div>
+                <div class="toolbar-actions">
+                  <div class="chat-mode-controls">
+                    <label class="switch">
+                      <input id="compareMode" type="checkbox">
+                      <span></span>
+                      并排对比
+                    </label>
+                    <label class="switch">
+                      <input id="sharedChatMode" type="checkbox">
+                      <span></span>
+                      共享窗口
+                    </label>
+                  </div>
+                  <button class="ghost-button" id="clearChat" type="button">清空</button>
+                </div>
+              </div>
+              <div class="chat-history" id="chatHistory" aria-live="polite">
+                <div class="empty-state chat-empty chat-empty-loading">
+                  <strong>正在同步历史对话</strong>
+                  <span>稍等一下，正在恢复上次聊天。</span>
+                </div>
+              </div>
+              <form class="composer" id="chatForm">
+                <textarea id="chatInput" rows="3" placeholder="问问AI"></textarea>
+                <input id="chatFileInput" type="file" multiple hidden>
+                <div class="composer-footer">
+                  <div class="composer-meta">
+                    <span id="activeModelLabel">GPT-4.1</span>
+                    <span id="estimatedTokens">预计 0 tokens</span>
+                  </div>
+                  <div class="composer-actions">
+                    <button class="icon-button" id="chatAttachButton" type="button" aria-label="发送文件" title="发送文件">+</button>
+                    <button class="primary-button" type="submit">发送</button>
+                  </div>
+                </div>
+              </form>
+            </section>
+          </section>
+
+          <section class="view" id="view-keys" data-title="统一密钥管理" data-eyebrow="P0 Security">
+            <div class="keys-layout">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Encrypted Vault</p>
+                    <h2>AES-256 本地密钥库</h2>
+                  </div>
+                  <button class="ghost-button" id="checkAllKeys" type="button">批量健康检测</button>
+                </div>
+                <form class="key-form" id="keyForm">
+                  <label>
+                    服务商
+                    <select id="providerInput">
+                      <option>OpenAI</option>
+                      <option>Claude</option>
+                      <option>Gemini</option>
+                      <option>DeepSeek</option>
+                      <option>Qwen</option>
+                    </select>
+                  </label>
+                  <label>
+                    名称
+                    <input id="keyNameInput" type="text" placeholder="生产环境 Key">
+                  </label>
+                  <label>
+                    API Key
+                    <input id="apiKeyInput" type="password" placeholder="sk-...">
+                  </label>
+                  <label>
+                    加密口令
+                    <input id="vaultPassInput" type="password" placeholder="用于派生 AES-256 密钥">
+                  </label>
+                  <button class="primary-button" type="submit">加密保存</button>
+                </form>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>服务商</th>
+                        <th>名称</th>
+                        <th>密钥</th>
+                        <th>健康度</th>
+                        <th>余额</th>
+                        <th>最后检测</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="keysTable"></tbody>
+                  </table>
+                </div>
+              </section>
+              <aside class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Policy</p>
+                    <h2>安全策略</h2>
+                  </div>
+                </div>
+                <div class="policy-list">
+                  <label class="check-row">
+                    <input id="encryptedOnlyToggle" type="checkbox" checked>
+                    <span>仅保存 AES-GCM 密文、盐值与 IV</span>
+                  </label>
+                  <label class="check-row">
+                    <input id="noSecretLogsToggle" type="checkbox" checked>
+                    <span>健康检测不暴露完整密钥</span>
+                  </label>
+                  <label class="check-row">
+                    <input id="balanceAlertsToggle" type="checkbox" checked>
+                    <span>异常余额自动触发预算告警</span>
+                  </label>
+                </div>
+                <div class="vault-note">
+                  <strong>实现状态</strong>
+                  <p>前端使用 Web Crypto 进行 AES-256-GCM 加密。生产环境应把加密、余额查询和审计日志迁移到后端服务。</p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <section class="view" id="view-usage" data-title="请求用量仪表盘" data-eyebrow="P0 Finance">
+            <div class="usage-layout">
+              <section class="panel span-2">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Token Analytics</p>
+                    <h2>按模型与时间追踪成本</h2>
+                  </div>
+                  <div class="inline-controls">
+                    <label>汇率
+                      <input id="fxRateInput" type="number" min="1" step="0.01">
+                    </label>
+                    <label>月预算 USD
+                      <input id="budgetInput" type="number" min="0" step="10">
+                    </label>
+                  </div>
+                </div>
+                <div class="chart-grid">
+                  <canvas id="usageLineChart" class="chart-canvas" width="900" height="360" aria-label="Token 时间趋势"></canvas>
+                  <canvas id="usageBarChart" class="chart-canvas" width="900" height="360" aria-label="模型成本占比图"></canvas>
+                </div>
+              </section>
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Budget</p>
+                    <h2>预算预警</h2>
+                  </div>
+                </div>
+                <div class="budget-meter">
+                  <div class="meter-ring" id="budgetRing"><span id="budgetPercent">0%</span></div>
+                  <p id="budgetMessage">设置月预算后可启用预警。</p>
+                </div>
+                <div class="price-list" id="priceList"></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="view" id="view-prompts" data-title="AI 应用工坊 / 预设专家库" data-eyebrow="P1 Workshop">
+            <div class="workshop-layout">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Expert Library</p>
+                    <h2>官方精选与个人收藏</h2>
+                  </div>
+                  <div class="toolbar-actions">
+                    <button class="ghost-button" id="exportPrompts" type="button">导出</button>
+                    <button class="ghost-button file-button" type="button">
+                      导入
+                      <input id="importPrompts" type="file" accept="application/json">
+                    </button>
+                  </div>
+                </div>
+                <div class="prompt-grid" id="promptGrid"></div>
+              </section>
+              <aside class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Builder</p>
+                    <h2>自定义提示词</h2>
+                  </div>
+                </div>
+                <form class="prompt-form" id="promptForm">
+                  <label>标题
+                    <input id="promptTitleInput" type="text" placeholder="例如：投研摘要专家">
+                  </label>
+                  <label>场景
+                    <select id="promptCategoryInput">
+                      <option>写作</option>
+                      <option>研发</option>
+                      <option>运营</option>
+                      <option>法务</option>
+                      <option>数据</option>
+                    </select>
+                  </label>
+                  <label>提示词内容
+                    <textarea id="promptBodyInput" rows="8" placeholder="你是一名..."></textarea>
+                  </label>
+                  <button class="primary-button" type="submit">保存模板</button>
+                </form>
+              </aside>
+            </div>
+          </section>
+
+          <section class="view" id="view-knowledge" data-title="知识库问答" data-eyebrow="Knowledge">
+            <div class="knowledge-layout simple-knowledge-layout">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Knowledge</p>
+                    <h2>资料与提问</h2>
+                  </div>
+                </div>
+                <form class="knowledge-form" id="knowledgeForm">
+                  <label>资料标题
+                    <input id="knowledgeNameInput" type="text" placeholder="例如：产品说明">
+                  </label>
+                  <label class="wide">资料内容
+                    <textarea id="knowledgeTextInput" rows="7" placeholder="粘贴一段资料，之后可以在右侧提问"></textarea>
+                  </label>
+                  <button class="primary-button" type="submit">加入资料库</button>
+                </form>
+                <div class="kb-list" id="knowledgeList"></div>
+              </section>
+              <section class="panel qa-panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Ask</p>
+                    <h2>向资料提问</h2>
+                  </div>
+                </div>
+                <div class="qa-answer" id="qaAnswer">先加入资料，然后输入问题。</div>
+                <form class="qa-form" id="qaForm">
+                  <textarea id="qaInput" rows="4" placeholder="例如：这段资料里有哪些关键风险？"></textarea>
+                  <button class="primary-button" type="submit">提问</button>
+                </form>
+              </section>
+            </div>
+          </section>
+
+          <section class="view" id="view-batch" data-title="批量处理" data-eyebrow="Batch">
+            <div class="batch-layout simple-batch-layout">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Batch</p>
+                    <h2>多行文本处理</h2>
+                  </div>
+                </div>
+                <form class="batch-form" id="batchForm">
+                  <label>任务类型
+                    <select id="batchType">
+                      <option>摘要</option>
+                      <option>翻译</option>
+                      <option>分类</option>
+                      <option>信息抽取</option>
+                    </select>
+                  </label>
+                  <label class="wide">每行一条输入
+                    <textarea id="batchRowsInput" rows="8" placeholder="客户反馈：希望增加预算提醒&#10;支持工单：需要批量翻译 CSV 内容"></textarea>
+                  </label>
+                  <button class="primary-button" type="submit">开始处理</button>
+                </form>
+              </section>
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Result</p>
+                    <h2>结果预览</h2>
+                  </div>
+                </div>
+                <p class="batch-status" id="batchStatus">输入多行文本后开始处理。</p>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>行</th>
+                        <th>输入</th>
+                        <th>结果</th>
+                        <th>状态</th>
+                      </tr>
+                    </thead>
+                    <tbody id="batchResults"></tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section class="view" id="view-profile" data-title="个人中心" data-eyebrow="Account">
+            <div class="platform-layout profile-layout">
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Profile</p>
+                    <h2>账号状态</h2>
+                  </div>
+                </div>
+                <div class="profile-summary">
+                  <div class="brand-avatar profile-avatar" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <circle cx="12" cy="8" r="3.25" fill="currentColor"></circle>
+                      <path d="M6.75 18.25C7.55 15.62 9.55 14.25 12 14.25C14.45 14.25 16.45 15.62 17.25 18.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <strong id="profileIdentity">未登录</strong>
+                    <span id="profileStatusLabel">访客模式</span>
+                  </div>
+                </div>
+                <div class="profile-actions">
+                  <a class="ghost-button account-link" id="profileSignInLink" href="/auth.html?mode=signin&returnTo=%2F">登录</a>
+                  <a class="primary-button account-link" id="profileSignUpLink" href="/auth.html?mode=signup&returnTo=%2F">注册</a>
+                  <button class="ghost-button" id="profileSignOutButton" type="button" hidden>退出登录</button>
+                </div>
+                <div class="setting-grid">
+                  <label class="check-row">
+                    <input id="emailLoginToggle" type="checkbox" checked>
+                    <span>邮箱验证码登录</span>
+                  </label>
+                  <label class="check-row">
+                    <input id="wechatLoginToggle" type="checkbox">
+                    <span>微信扫码登录</span>
+                  </label>
+                  <label class="check-row">
+                    <input id="teamSpaceToggle" type="checkbox" checked>
+                    <span>团队空间与成员权限</span>
+                  </label>
+                </div>
+              </section>
+              <section class="panel">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Plan</p>
+                    <h2>订阅方案</h2>
+                  </div>
+                </div>
+                <div class="billing-plans" id="billingPlans">
+                  <button type="button" data-plan="starter">
+                    <strong>Starter</strong>
+                    <span>¥49 / 月</span>
+                    <small>个人密钥库、基础对比</small>
+                  </button>
+                  <button type="button" data-plan="team" class="selected">
+                    <strong>Team</strong>
+                    <span>¥299 / 月</span>
+                    <small>知识库、审计、共享专家库</small>
+                  </button>
+                  <button type="button" data-plan="scale">
+                    <strong>Scale</strong>
+                    <span>按量</span>
+                    <small>私有部署、SLA、统一账单</small>
+                  </button>
+                </div>
+              </section>
+              <section class="panel span-2">
+                <div class="panel-header">
+                  <div>
+                    <p class="section-kicker">Security</p>
+                    <h2>安全偏好</h2>
+                  </div>
+                  <button class="ghost-button" id="addAuditLog" type="button">写入操作日志</button>
+                </div>
+                <div class="moderation-row">
+                  <label>敏感词过滤
+                    <input id="safetyWords" type="text" value="隐私, 密码, 内部财报">
+                  </label>
+                  <label class="switch">
+                    <input id="safetyToggle" type="checkbox" checked>
+                    <span></span>
+                    内容安全审核
+                  </label>
+                </div>
+                <div class="timeline audit" id="auditTimeline"></div>
+              </section>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="liquid-glass-modules.js?v=model-slider-p150-fast20-20260629"></script>
+    <script src="app.js?v=model-scoped-chat-20260630"></script>
+  </body>
+</html>
