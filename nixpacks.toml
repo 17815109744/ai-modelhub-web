@@ -8,4 +8,4 @@ cmds = ["DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@localhost:5
 cmds = ["DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@localhost:5432/modelhub} DIRECT_URL=${DIRECT_URL:-postgresql://postgres:postgres@localhost:5432/modelhub} pnpm prisma generate"]
 
 [start]
-cmd = "node server.js"
+cmd = "pnpm prisma generate && node server.js"
