@@ -6,7 +6,7 @@
   "description": "AI multi-provider key vault, model router, usage dashboard, prompt workshop, knowledge base and batch job console.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "prisma generate && node server.js",
     "dev": "node server.js",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
