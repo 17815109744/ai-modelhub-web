@@ -939,7 +939,16 @@ async function writeAudit(context, input) {
   return auditToState(row);
 }
 
+async function checkDatabaseHealth() {
+  const prisma = getPrismaClient();
+  await prisma.$queryRaw`select 1`;
+  return {
+    ok: true
+  };
+}
+
 module.exports = {
+  checkDatabaseHealth,
   ensureTenant,
   listCredentials,
   getCredentialSecretForProvider,

@@ -47,11 +47,11 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 npm install
 ```
 
-5. Generate Prisma client and migrate:
+5. Generate Prisma client and sync the schema:
 
 ```bash
 npm run db:generate
-npm run db:migrate
+npm run db:push
 ```
 
 6. Run `sql/supabase_rls.sql` in the Supabase SQL editor.
@@ -70,6 +70,35 @@ The homepage login box will use Supabase Auth and send the access token to the b
 
 Use `DATA_BACKEND=prisma` when you want database-backed multi-user isolation for private data instead of the local JSON demo store.
 
+## Railway Database Environment
+
+Set these Railway variables for the production service:
+
+```text
+DATA_BACKEND=prisma
+PRISMA_DATABASE_URL=postgresql://...:5432/postgres
+DATABASE_URL=postgresql://...:6543/postgres?pgbouncer=true&connection_limit=5&pool_timeout=30
+DIRECT_URL=postgresql://...:5432/postgres
+SUPABASE_URL=https://PROJECT_REF.supabase.co
+SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+CREDENTIAL_MASTER_KEY=...
+```
+
+Runtime Prisma uses `PRISMA_DATABASE_URL` first, then `DIRECT_URL`, then `DATABASE_URL`. This keeps production stable when the Supabase transaction pooler is not reachable from a given environment.
+
+After deployment, `/api/health` should show:
+
+```json
+{
+  "dataBackend": "prisma",
+  "database": {
+    "enabled": true,
+    "ok": true
+  }
+}
+```
+
 ## Backends
 
 `DATA_BACKEND=local` keeps the current JSON demo database:
@@ -78,7 +107,7 @@ Use `DATA_BACKEND=prisma` when you want database-backed multi-user isolation for
 data/db.json
 ```
 
-`DATA_BACKEND=prisma` enables Supabase token validation and Prisma storage boundaries. API credentials, audit logs, chat history, and usage records are stored in Supabase PostgreSQL through Prisma and scoped to the signed-in user organization. Chat message bodies are encrypted at rest with AES-256-GCM before they are written to the database. Other modules such as prompts, knowledge bases, and batch jobs still use the local demo store while the Prisma adapter is being expanded.
+`DATA_BACKEND=prisma` enables Supabase token validation and Prisma storage boundaries. API credentials, audit logs, chat history, usage records, settings, and prompt templates are stored in Supabase PostgreSQL through Prisma and scoped to the signed-in user organization. Chat message bodies are encrypted at rest with AES-256-GCM before they are written to the database. Knowledge base and batch job demo data still use the local demo store while the Prisma adapter is being expanded.
 
 ## Security
 

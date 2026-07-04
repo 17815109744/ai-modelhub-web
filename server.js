@@ -1064,10 +1064,29 @@ async function handleApi(req, res) {
 
   try {
     if (method === "GET" && (url.pathname === "/api/health" || url.pathname === "/api/status")) {
+      let database = {
+        enabled: store.backend === "prisma",
+        ok: store.backend !== "prisma"
+      };
+      if (store.backend === "prisma" && typeof store.checkDatabaseHealth === "function") {
+        try {
+          database = {
+            enabled: true,
+            ...(await store.checkDatabaseHealth())
+          };
+        } catch (error) {
+          database = {
+            enabled: true,
+            ok: false,
+            error: redactSensitive(error.message || "Database health check failed")
+          };
+        }
+      }
       return sendJson(res, 200, {
         status: "running",
         service: "modelhub-backend",
         dataBackend: config.dataBackend,
+        database,
         uptimeSeconds: Math.round(process.uptime()),
         timestamp: new Date().toISOString()
       });
